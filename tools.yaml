@@ -1,7 +1,7 @@
 tools:
-  - name: gcp-command
+  - name: michael-gcp-command
     description: "run gcp commands"
-    alias: "gcp-command"
+    alias: "michael-gcp-command"
     image: "google/cloud-sdk:stable"
     content: |
       echo $GCLOUD
