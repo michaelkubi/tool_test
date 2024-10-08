@@ -1,0 +1,32 @@
+tools:
+  - name: gcp-command
+    description: "run gcp commands"
+    alias: "gcp-command"
+    image: "google/cloud-sdk:stable"
+    content: |
+      echo $GCLOUD
+      echo "========"
+      echo $GCLOUD | base64 --decode > /root/service_acct_key
+      cat /root/service_acct_key
+      gcloud auth login --cred-file=/root/service_acct_key
+      gcloud {{.command}}
+
+    args:
+      - name: command
+        description: 'command to run via gcloud CLI'
+        required: True
+    secrets:
+      - "GCLOUD"
+
+  - name: aws-s3-list
+    description: "List S3 buckets using AWS CLI"
+    alias: "awss3list"
+    image: "amazon/aws-cli"
+    content: |
+      aws s3 ls
+    args: []
+    env:
+      - "AWS_ACCESS_KEY_ID"
+      - "AWS_SECRET_ACCESS_KEY"
+      - "AWS_DEFAULT_REGION"
+      - "AWS_SESSION_TOKEN"
