@@ -26,11 +26,11 @@ tools:
         echo "Sorry, you are not allowed to restart deployments."
     fi
   args:
-    app_name:
+    - app_name:
       description: 'The name of the live app containing the deployment to restart.'
       required: false
       default: "server"
-    deployment_name:
+    - deployment_name:
       description: 'The name of the deployment to restart.'
       required: true
   env:
