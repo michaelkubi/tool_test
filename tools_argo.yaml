@@ -66,7 +66,7 @@ tools:
     if [ "$user_allowed" = false ]; then
         echo "Sorry, you are not allowed to list applications."
     fi
-  args: {}
+  args: []
   env:
     - "ARGOCD_SERVER"
     - "ARGOCD_USERNAME"
@@ -101,7 +101,7 @@ tools:
         echo "Sorry, you are not allowed to list deployments."
     fi
   args:
-    app_name:
+    - app_name:
       description: 'The name of the Argo CD application.'
       required: true
   env:
