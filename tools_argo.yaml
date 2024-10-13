@@ -1,0 +1,112 @@
+tools:
+- name: argocd-restart-tool
+  image: argoproj/argocd
+  description: "Restart a deployment in a live Argo CD application."
+  type: docker
+  alias: argocd-restart
+  content: |
+    argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --plaintext
+    IFS=","
+    read -r approving << EOF
+    $APPROVING_USERS
+    EOF
+    approving_users_list=($APPROVING_USERS)
+    # Checking if KUBIYA_USER_EMAIL is in approving_users_list
+    user_allowed=false
+    for email in "${approving_users_list[@]}"; do
+        if [ "$email" = "$KUBIYA_USER_EMAIL" ]; then
+            # Restart the specified deployment
+            argocd app actions run "{{ .app_name }}" restart --kind Deployment --resource-name "{{ .deployment_name }}" --insecure
+            user_allowed=true
+            break
+        fi
+    done
+
+    if [ "$user_allowed" = false ]; then
+        echo "Sorry, you are not allowed to restart deployments."
+    fi
+  args:
+    app_name:
+      description: 'The name of the live app containing the deployment to restart.'
+      required: false
+      default: "server"
+    deployment_name:
+      description: 'The name of the deployment to restart.'
+      required: true
+  env:
+    - "ARGOCD_SERVER"
+    - "ARGOCD_USERNAME"
+    - "ARGOCD_PASSWORD"
+    - "KUBIYA_USER_EMAIL"
+    - "APPROVING_USERS"
+
+- name: argocd-list-apps-tool
+  image: argoproj/argocd
+  description: "List all applications in Argo CD."
+  type: docker
+  alias: argocd-list-apps
+  content: |
+    argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --plaintext
+    IFS=","
+    read -r approving << EOF
+    $APPROVING_USERS
+    EOF
+    approving_users_list=($APPROVING_USERS)
+    # Checking if KUBIYA_USER_EMAIL is in approving_users_list
+    user_allowed=false
+    for email in "${approving_users_list[@]}"; do
+        if [ "$email" = "$KUBIYA_USER_EMAIL" ]; then
+            # List all applications
+            argocd app list --insecure
+            user_allowed=true
+            break
+        fi
+    done
+
+    if [ "$user_allowed" = false ]; then
+        echo "Sorry, you are not allowed to list applications."
+    fi
+  args: {}
+  env:
+    - "ARGOCD_SERVER"
+    - "ARGOCD_USERNAME"
+    - "ARGOCD_PASSWORD"
+    - "KUBIYA_USER_EMAIL"
+    - "APPROVING_USERS"
+
+- name: argocd-list-deployments-tool
+  image: argoproj/argocd
+  description: "List deployments under a specified Argo CD application."
+  type: docker
+  alias: argocd-list-deployments
+  content: |
+    argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --plaintext
+    IFS=","
+    read -r approving << EOF
+    $APPROVING_USERS
+    EOF
+    approving_users_list=($APPROVING_USERS)
+    # Checking if KUBIYA_USER_EMAIL is in approving_users_list
+    user_allowed=false
+    for email in "${approving_users_list[@]}"; do
+        if [ "$email" = "$KUBIYA_USER_EMAIL" ]; then
+            # List deployments under the specified application
+            argocd app resources "{{ .app_name }}" --kind Deployment --insecure
+            user_allowed=true
+            break
+        fi
+    done
+
+    if [ "$user_allowed" = false ]; then
+        echo "Sorry, you are not allowed to list deployments."
+    fi
+  args:
+    app_name:
+      description: 'The name of the Argo CD application.'
+      required: true
+  env:
+    - "ARGOCD_SERVER"
+    - "ARGOCD_USERNAME"
+    - "ARGOCD_PASSWORD"
+    - "KUBIYA_USER_EMAIL"
+    - "APPROVING_USERS"
