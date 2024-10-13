@@ -28,8 +28,7 @@ tools:
   args:
     - app_name:
       description: 'The name of the live app containing the deployment to restart.'
-      required: false
-      default: "server"
+      required: true
     - deployment_name:
       description: 'The name of the deployment to restart.'
       required: true
