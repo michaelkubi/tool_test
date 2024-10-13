@@ -1,6 +1,6 @@
 tools:
 - name: argocd-restart-tool
-  image: argoproj/argocd:v2.6.15
+  image: argoproj/argocd:v2.5.22
   description: "Restart a deployment in a live Argo CD application."
   type: docker
   alias: argocd-restart
@@ -40,7 +40,7 @@ tools:
     - "APPROVING_USERS"
 
 - name: argocd-list-apps-tool
-  image: argoproj/argocd:v2.6.15
+  image: argoproj/argocd:v2.5.22
   description: "List all applications in Argo CD."
   type: docker
   alias: argocd-list-apps
@@ -74,7 +74,7 @@ tools:
     - "APPROVING_USERS"
 
 - name: argocd-list-deployments-tool
-  image: argoproj/argocd:v2.6.15
+  image: argoproj/argocd:v2.5.22
   description: "List deployments under a specified Argo CD application."
   type: docker
   alias: argocd-list-deployments
