@@ -109,3 +109,19 @@ tools:
     - "ARGOCD_PASSWORD"
     - "KUBIYA_USER_EMAIL"
     - "APPROVING_USERS"
+
+- name: argocd-list-apps-tool-new
+  image: argoproj/argocd:v2.5.22
+  description: "List all applications in Argo CD."
+  type: docker
+  alias: argocd-list-apps-new
+  content: |
+    argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --plaintext
+    argocd app list --insecure
+  args: []
+  env:
+    - "ARGOCD_SERVER"
+    - "ARGOCD_USERNAME"
+    - "ARGOCD_PASSWORD"
+    - "KUBIYA_USER_EMAIL"
+    - "APPROVING_USERS"
