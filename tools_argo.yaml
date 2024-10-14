@@ -125,3 +125,71 @@ tools:
     - "ARGOCD_PASSWORD"
     - "KUBIYA_USER_EMAIL"
     - "APPROVING_USERS"
+
+
+- name: argocd-list-apps-python-tool
+  image: python:3.9-slim
+  description: "List all applications in Argo CD using Python."
+  type: docker
+  alias: argocd-list-apps-new
+  content: |
+    import os
+    import requests
+    import urllib3
+
+    # Disable warnings for insecure connections
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    def main():
+        ARGOCD_SERVER = os.getenv('ARGOCD_SERVER')
+        ARGOCD_USERNAME = os.getenv('ARGOCD_USERNAME')
+        ARGOCD_PASSWORD = os.getenv('ARGOCD_PASSWORD')
+
+        if not ARGOCD_SERVER or not ARGOCD_USERNAME or not ARGOCD_PASSWORD:
+            print("Missing environment variables.")
+            return
+
+        # Ensure the server URL starts with https://
+        if not ARGOCD_SERVER.startswith("http://") and not ARGOCD_SERVER.startswith("https://"):
+            ARGOCD_SERVER = "https://" + ARGOCD_SERVER
+
+        # Login to Argo CD to obtain a token
+        try:
+            response = requests.post(
+                f"{ARGOCD_SERVER}/api/v1/session",
+                json={"username": ARGOCD_USERNAME, "password": ARGOCD_PASSWORD},
+                verify=False  # Skip SSL verification
+            )
+            response.raise_for_status()
+            token = response.json()['token']
+        except Exception as e:
+            print(f"Failed to login: {e}")
+            return
+
+        # Get the list of applications
+        try:
+            headers = {'Authorization': f'Bearer {token}'}
+            response = requests.get(
+                f"{ARGOCD_SERVER}/api/v1/applications",
+                headers=headers,
+                verify=False  # Skip SSL verification
+            )
+            response.raise_for_status()
+            apps = response.json()['items']
+            for app in apps:
+                print(app['metadata']['name'])
+        except Exception as e:
+            print(f"Failed to retrieve applications: {e}")
+
+    if __name__ == "__main__":
+        main()
+  args: []
+  requirements:
+    - requests
+    - urllib3
+  env:
+    - "ARGOCD_SERVER"
+    - "ARGOCD_USERNAME"
+    - "ARGOCD_PASSWORD"
+    - "KUBIYA_USER_EMAIL"
+    - "APPROVING_USERS"
