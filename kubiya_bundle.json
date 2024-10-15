@@ -51,7 +51,7 @@
         {
           "source": null,
           "destination": "/tmp/requirements.txt",
-          "content": "\npandas==2.2.3\n\ntyper==0.12.5\n"
+          "content": "pandas==2.2.3\ntyper==0.12.5"
         }
       ],
       "with_services": [],
@@ -64,6 +64,45 @@
       "on_start": null,
       "on_complete": null,
       "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"test_123\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n        Param0(\"name (Required)<br/>Input param for arg: name, type: string\"):::paramClass\n        Param1(\"boolean_val (Required)<br/>Input param for arg: boolean_val, type: string, Options: true, false\"):::paramClass\n        Param2(\"optional_str (Optional)<br/>Input param for arg: optional_str, type: string<br/>Default: sheeesh\"):::paramClass\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
+      "workflow": false,
+      "metadata": {}
+    },
+    {
+      "name": "list_argo_apps",
+      "source": null,
+      "alias": null,
+      "description": "Prints pandas {name}!",
+      "type": "docker",
+      "content": "\ncurl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1\n. $HOME/.cargo/env\n\nuv venv > /dev/null 2>&1\n. .venv/bin/activate > /dev/null 2>&1\n\nuv pip install -r /tmp/requirements.txt > /dev/null 2>&1\n\npython /tmp/main.py \n",
+      "content_url": null,
+      "args": [],
+      "env": [],
+      "secrets": [],
+      "dependencies": null,
+      "dependencies_url": null,
+      "openapi": null,
+      "with_files": [
+        {
+          "source": null,
+          "destination": "/tmp/main.py",
+          "content": "\nfrom typing_extensions import Annotated\n\nimport typer\n\ndef list_argo_apps():\n    import os\n    import requests\n\n    ARGOCD_SERVER = os.getenv('ARGOCD_SERVER')\n    ARGOCD_USERNAME = os.getenv('ARGOCD_USERNAME')\n    ARGOCD_PASSWORD = os.getenv('ARGOCD_PASSWORD')\n\n    if not ARGOCD_SERVER or not ARGOCD_USERNAME or not ARGOCD_PASSWORD:\n        print(\"Missing environment variables.\")\n        return\n\n    # Ensure the server URL starts with https://\n    if not ARGOCD_SERVER.startswith(\"http://\") and not ARGOCD_SERVER.startswith(\"https://\"):\n        ARGOCD_SERVER = \"https://\" + ARGOCD_SERVER\n\n    # Login to Argo CD to obtain a token\n    try:\n        response = requests.post(\n            f\"{ARGOCD_SERVER}/api/v1/session\",\n            json={\"username\": ARGOCD_USERNAME, \"password\": ARGOCD_PASSWORD},\n            verify=False  # Skip SSL verification\n        )\n        response.raise_for_status()\n        token = response.json()['token']\n    except Exception as e:\n        print(f\"Failed to login: {e}\")\n        return\n\n    # Get the list of applications\n    try:\n        headers = {'Authorization': f'Bearer {token}'}\n        response = requests.get(\n            f\"{ARGOCD_SERVER}/api/v1/applications\",\n            headers=headers,\n            verify=False  # Skip SSL verification\n        )\n        response.raise_for_status()\n        apps = response.json()['items']\n        for app in apps:\n            print(app['metadata']['name'])\n    except Exception as e:\n        print(f\"Failed to retrieve applications: {e}\")\n\n\nif __name__ == \"__main__\":\n    typer.run(list_argo_apps)\n"
+        },
+        {
+          "source": null,
+          "destination": "/tmp/requirements.txt",
+          "content": "pandas==2.2.3\nrequests==2.25.1\ntyper==0.12.5"
+        }
+      ],
+      "with_services": [],
+      "with_git_repo": null,
+      "with_volumes": [],
+      "entrypoint": [],
+      "icon_url": null,
+      "image": "python:3.12",
+      "long_running": false,
+      "on_start": null,
+      "on_complete": null,
+      "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"list_argo_apps\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
       "workflow": false,
       "metadata": {}
     },

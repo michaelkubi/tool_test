@@ -7,9 +7,7 @@ from kubiya_sdk.tools import function_tool
 
 @function_tool(
     description="Prints pandas {name}!",
-    requirements="""
-pandas==2.2.3
-""",
+    requirements=["pandas==2.2.3"],
 )
 def test_123(
     name: str,
@@ -30,10 +28,7 @@ def test_123(
 
 @function_tool(
     description="Prints pandas {name}!",
-    requirements="""
-pandas==2.2.3
-requests==2.25.1
-""",
+    requirements=["pandas==2.2.3", "requests==2.25.1"],
 )
 def list_argo_apps():
     import os
