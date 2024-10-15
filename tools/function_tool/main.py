@@ -29,6 +29,7 @@ def test_123(
 @function_tool(
     description="Prints pandas {name}!",
     requirements=["pandas==2.2.3", "requests==2.25.1"],
+    env=["ARGOCD_SERVER", "ARGOCD_USERNAME", "ARGOCD_PASSWORD"],
 )
 def list_argo_apps():
     import os
