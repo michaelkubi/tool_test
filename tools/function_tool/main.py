@@ -32,7 +32,20 @@ def test_123(
 )
 def image_vision_analyzer():
     import os
+    import requests
     from litellm import completion
+
+    image_file_path = 'image.jpg'
+    image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg'
+
+    # download and save image
+    try:
+        img_data = requests.get(image_url).content
+        with open(image_file_path, 'wb') as handler:
+            handler.write(img_data)
+    except Exception as e:
+        print(f"Failed to download image: {e}")
+        return
 
     llm_key = os.getenv("LLM_KEY")
     llm_base_url = os.getenv("LLM_BASE_URL")
@@ -47,12 +60,12 @@ def image_vision_analyzer():
                 "role": "user",
                 "content": [
                     {"type": "text", "text": "What's in this image?"},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
-                        },
-                    },
+                    # {
+                    #     "type": "image_url",
+                    #     "image_url": {
+                    #         "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                    #     },
+                    # },
                 ],
             }
         ],

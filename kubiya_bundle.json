@@ -88,7 +88,7 @@
         {
           "source": null,
           "destination": "/tmp/main.py",
-          "content": "\nfrom typing_extensions import Annotated\n\nimport typer\n\ndef image_vision_analyzer():\n    import os\n    from litellm import completion\n\n    llm_key = os.getenv(\"LLM_KEY\")\n    llm_base_url = os.getenv(\"LLM_BASE_URL\")\n\n    # openai call\n    response = completion(\n        model=\"openai/gpt-4o\",\n        api_key=llm_key,\n        base_url=llm_base_url,\n        messages=[\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\"type\": \"text\", \"text\": \"What's in this image?\"},\n                    {\n                        \"type\": \"image_url\",\n                        \"image_url\": {\n                            \"url\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg\"\n                        },\n                    },\n                ],\n            }\n        ],\n    )\n\n    print(response.choices[0].message.content)\n\n\nif __name__ == \"__main__\":\n    typer.run(image_vision_analyzer)\n"
+          "content": "\nfrom typing_extensions import Annotated\n\nimport typer\n\ndef image_vision_analyzer():\n    import os\n    import requests\n    from litellm import completion\n\n    image_file_path = 'image.jpg'\n    image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg'\n\n    # download and save image\n    try:\n        img_data = requests.get(image_url).content\n        with open(image_file_path, 'wb') as handler:\n            handler.write(img_data)\n    except Exception as e:\n        print(f\"Failed to download image: {e}\")\n        return\n\n    llm_key = os.getenv(\"LLM_KEY\")\n    llm_base_url = os.getenv(\"LLM_BASE_URL\")\n\n    # openai call\n    response = completion(\n        model=\"openai/gpt-4o\",\n        api_key=llm_key,\n        base_url=llm_base_url,\n        messages=[\n            {\n                \"role\": \"user\",\n                \"content\": [\n                    {\"type\": \"text\", \"text\": \"What's in this image?\"},\n                    # {\n                    #     \"type\": \"image_url\",\n                    #     \"image_url\": {\n                    #         \"url\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg\"\n                    #     },\n                    # },\n                ],\n            }\n        ],\n    )\n\n    print(response.choices[0].message.content)\n\n\nif __name__ == \"__main__\":\n    typer.run(image_vision_analyzer)\n"
         },
         {
           "source": null,
@@ -198,6 +198,45 @@
       "on_start": null,
       "on_complete": null,
       "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"say_hello\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n        Param0(\"name (Required)<br/>name to say hello to\"):::paramClass\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
+      "workflow": false,
+      "metadata": {}
+    },
+    {
+      "name": "image_vision",
+      "source": null,
+      "alias": null,
+      "description": "Image Vision!",
+      "type": "docker",
+      "content": "\ncurl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1\n. $HOME/.cargo/env\n\nuv venv > /dev/null 2>&1\n. .venv/bin/activate > /dev/null 2>&1\n\nuv pip install -r /tmp/requirements.txt > /dev/null 2>&1\n\npython /tmp/main.py\n",
+      "content_url": null,
+      "args": [],
+      "env": [],
+      "secrets": [],
+      "dependencies": null,
+      "dependencies_url": null,
+      "openapi": null,
+      "with_files": [
+        {
+          "source": null,
+          "destination": "/tmp/main.py",
+          "content": "import argparse\n\n\ndef hello_world():\n    print(f\"Hello, Michael!\")\n\n\nif __name__ == \"__main__\":\n    hello_world()\n"
+        },
+        {
+          "source": null,
+          "destination": "/tmp/requirements.txt",
+          "content": ""
+        }
+      ],
+      "with_services": [],
+      "with_git_repo": null,
+      "with_volumes": [],
+      "entrypoint": [],
+      "icon_url": null,
+      "image": "python:3.12",
+      "long_running": false,
+      "on_start": null,
+      "on_complete": null,
+      "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"image_vision\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
       "workflow": false,
       "metadata": {}
     }
