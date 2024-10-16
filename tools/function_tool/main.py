@@ -25,6 +25,41 @@ def test_123(
 
     print(df)
 
+@function_tool(
+    description="Image vision analyzer!",
+    requirements=["litellm"],
+    env=["LLM_KEY", "LLM_BASE_URL"],
+)
+def image_vision_analyzer():
+    import os
+    from litellm import completion
+
+    llm_key = os.getenv("LLM_KEY")
+    llm_base_url = os.getenv("LLM_BASE_URL")
+
+    # openai call
+    response = completion(
+        model="openai/gpt-4o",
+        api_key=llm_key,
+        base_url=llm_base_url,
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "What's in this image?"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                        },
+                    },
+                ],
+            }
+        ],
+    )
+
+    print(response.choices[0].message.content)
+
 
 @function_tool(
     description="Prints pandas {name}!",
