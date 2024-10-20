@@ -77,6 +77,10 @@ python /tmp/grafana.py --grafana_dashboard_url "$grafana_dashboard_url" --alert_
             destination="/tmp/grafana.py",
             source=inspect.getsource(grafana),
         ),
+        FileSpec(
+            destination="/tmp/requirements.txt",
+            content="slack_sdk==3.11.0\nrequests==2.32.3\nlitellm==1.49.5\npillow==11.0.0",
+        ),
     ],
 )
 
