@@ -30,7 +30,7 @@ python /tmp/main.py
         ),
         FileSpec(
             destination="/tmp/requirements.txt",
-            content="",  # Add any requirements here
+            content="requests",
         ),
     ],
 )
