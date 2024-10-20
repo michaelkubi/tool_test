@@ -2,6 +2,7 @@ from . import main
 
 import inspect
 
+from . import grafana
 
 from kubiya_sdk.tools.models import Tool, Arg, FileSpec
 from kubiya_sdk.tools.registry import tool_registry
