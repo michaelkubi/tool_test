@@ -81,10 +81,10 @@ python /tmp/grafana.py --grafana_dashboard_url "$grafana_dashboard_url" --alert_
         FileSpec(
             destination="/tmp/requirements.txt",
             content="""
-slack_sdk==3.11.0
-requests==2.32.3
-litellm==1.49.5
-pillow==11.0.0
+slack_sdk
+requests
+litellm
+pillow
 """,
         ),
     ],

@@ -1,4 +1,5 @@
 
+import requests
 
 def hello_world():
     print(f"Hello, Michael!")
