@@ -23,18 +23,13 @@ if [ -f /tmp/requirements.txt ]; then
 fi
 """,
     content="""
-python /tmp/main.py "{{ .name }}"
+python /tmp/main.py $name
 """,
     with_files=[
         FileSpec(
             destination="/tmp/main.py",
             content=inspect.getsource(main),
         ),
-        # Add any requirements here if needed
-        # FileSpec(
-        #     destination="/tmp/requirements.txt",
-        #     content="",
-        # ),
     ],
 )
 
