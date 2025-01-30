@@ -8,7 +8,7 @@ from . import main
 hello_tool = Tool(
     name="say_hello",
     type="docker",
-    image="python:3.12",
+    image="dmichaelb/test:amd",
     description="Prints hello {name}!",
     args=[Arg(name="name", description="name to say hello to", required=True)],
     image_provider=ImageProvider(
