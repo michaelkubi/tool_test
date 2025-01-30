@@ -1,4 +1,7 @@
-import argparse
+try:
+    import argparse
+except ImportError:
+    print("Error: argparse module not found.")
 
 
 def hello_world(name: str):
