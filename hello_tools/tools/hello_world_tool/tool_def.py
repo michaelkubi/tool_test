@@ -38,4 +38,4 @@ python /tmp/main.py "{{ .name }}"
     ],
 )
 
-tool_registry.register(hello_tool)
+tool_registry.register(hello_tool, "hello_world_tool")
