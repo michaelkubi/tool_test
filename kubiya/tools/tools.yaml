@@ -11,8 +11,13 @@ tools:
     alias: "pythonsleep"
     type: python
     content: |
+      import os
       import time
-      number_of_events = int(os.getenv("NUMBER_OF_EVENTS", "10"))
+      number_of_events = int(os.getenv("NUMBER_OF_EVENTS", "0"))
+      if number_of_events == 0:
+        print("number of events shoulb be greater than 0")
+        os.exit(1)
+      
       for i in range(number_of_events):
           print(i, flush=True)
           time.sleep(1)
@@ -26,7 +31,7 @@ tools:
     alias: "listenv"
     image: "amazon/aws-cli"
     content: |
-      for ((i=1;i<=${NUMBER_OF_TIMES:-10};i++)); do echo "sheeesh"; sleep 5; done; echo "Done!"
+      [[ -z "$number_of_times" || "$number_of_times" -le 0 ]] && { echo "number_of_times should be greater than 0" >&2; exit 1; } || for ((i=1;i<=number_of_times;i++)); do echo "sheeesh"; sleep 1; done; echo "Done!"
     args:
       - name: number_of_times
         description: 'number of times to print sheeesh'
