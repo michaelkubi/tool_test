@@ -11,12 +11,13 @@ tools:
     alias: "pythonsleep"
     type: python
     content: |
+      import sys
       import os
       import time
       number_of_events = int(os.getenv("NUMBER_OF_EVENTS", "0"))
       if number_of_events == 0:
         print("number of events shoulb be greater than 0")
-        os.exit(1)
+        sys.exit(1)
       
       for i in range(number_of_events):
           print(i, flush=True)
