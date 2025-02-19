@@ -9,7 +9,7 @@ tools:
   - name: python-sleep
     description: "This tool uses python to print x number of events"
     alias: "pythonsleep"
-    type: python
+    image: python:3.9-alpine
     content: |
       import sys
       import os
