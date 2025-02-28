@@ -4,7 +4,7 @@ tools:
     alias: "listenv"
     image: "alpine:3.20"
     content: |
-      env # 
+      env
       
   - name: list-env-2
     description: "This tool lists all the env vars"
