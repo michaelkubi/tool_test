@@ -5,13 +5,6 @@ tools:
     image: "alpine:3.20"
     content: |
       env
-      
-  - name: list-env-2
-    description: "This tool lists all the env vars"
-    alias: "listenv2"
-    image: "alpine:3.20"
-    content: |
-      env 
 
   - name: python-sleep
     description: "This tool uses python to print x number of events"
