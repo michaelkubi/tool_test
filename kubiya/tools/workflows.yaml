@@ -1,4 +1,4 @@
-name: tool_chaining_example
+name: tool_chaining_example_michael
 description: Example DAG demonstrating data flow between tool steps
 steps:
   - name: generate-data
