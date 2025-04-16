@@ -1,4 +1,4 @@
-name: michael
+name: michaelbauer
 description: Example DAG demonstrating data flow between tool steps
 steps:
   - name: generate-data
