@@ -6,7 +6,7 @@ tools:
     content: |
       env
 
-  - name: python-sleep
+  - name: python-sleepW
     description: "This tool uses python to print x number of events"
     alias: "pythonsleep"
     image: python:3.9-alpine
