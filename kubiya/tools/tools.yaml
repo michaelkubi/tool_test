@@ -47,7 +47,10 @@ tools:
     description: "This tool uses bash to print x number of events"
     alias: "listenv"
     image: "amazon/aws-cli"
-    content: ./run.sh
+    content: |
+      ls
+      cat run.sh
+      ./run.sh
     args:
       - name: number_of_times
         description: 'number of times to print sheeesh'
