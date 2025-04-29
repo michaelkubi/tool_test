@@ -43,7 +43,7 @@ tools:
         required: false
     long_running: true
 
-  - name: print-bash
+  - name: print-bash-m
     description: "This tool uses bash to print x number of events"
     alias: "listenv"
     image: "amazon/aws-cli"
