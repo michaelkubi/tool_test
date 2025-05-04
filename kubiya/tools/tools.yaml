@@ -6,7 +6,7 @@ tools:
     content: |
       env
 
-  - name: python-sleepW
+  - name: python-sleep
     description: "This tool uses python to print x number of events"
     alias: "pythonsleep"
     image: python:3.9-alpine
@@ -67,3 +67,10 @@ tools:
     image: "alpine:latest"
     content: |
       echo "Hello World"
+
+  - name: throw-error
+    description: "This tool throws an error"
+    alias: "throw-error"
+    image: "alpine:latest"
+    content: |
+      exit 1
