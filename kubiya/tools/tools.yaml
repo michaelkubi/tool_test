@@ -4,7 +4,7 @@ tools:
     alias: "listenv"
     image: "alpine:3.20"
     content: |
-      env
+      echo "Hello World"
 
   - name: python-sleep
     description: "This tool uses python to print x number of events"
