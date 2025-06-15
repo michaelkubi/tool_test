@@ -73,4 +73,5 @@ tools:
     alias: "throw-error"
     image: "alpine:latest"
     content: |
-      exit 1
+      echo "Some normal Logic"
+      bash -c 'echo "Something went wrong" 1>&2; exit 42'
