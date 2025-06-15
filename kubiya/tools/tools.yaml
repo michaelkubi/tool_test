@@ -74,4 +74,3 @@ tools:
     image: "alpine:latest"
     content: |
       echo "Some normal Logic"
-      bash -c 'echo "Something went wrong" 1>&2; exit 42'
