@@ -74,3 +74,4 @@ tools:
     image: "alpine:latest"
     content: |
       echo "Some normal Logic"
+      bash
