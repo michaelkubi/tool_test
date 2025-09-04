@@ -72,6 +72,7 @@ tools:
     description: "This tool throws an error"
     alias: "throw-error"
     image: "alpine:latest"
+    version: "v2"
     content: |
       echo "Some normal Logic"
       # sleep 5
